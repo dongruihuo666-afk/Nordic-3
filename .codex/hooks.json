@@ -1,0 +1,18 @@
+{
+  "description": "Warn if handoff files are missing or local data is in Git's index.",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"import pathlib,runpy; d=pathlib.Path.cwd(); p=next((x/'.codex/hooks/check_handoff.py' for x in (d,*d.parents) if (x/'.codex/hooks/check_handoff.py').is_file()),None); runpy.run_path(str(p),run_name='__main__') if p else None\"",
+            "commandWindows": "python -c \"import pathlib,runpy; d=pathlib.Path.cwd(); p=next((x/'.codex/hooks/check_handoff.py' for x in (d,*d.parents) if (x/'.codex/hooks/check_handoff.py').is_file()),None); runpy.run_path(str(p),run_name='__main__') if p else None\"",
+            "timeout": 10,
+            "statusMessage": "Checking project handoff"
+          }
+        ]
+      }
+    ]
+  }
+}
