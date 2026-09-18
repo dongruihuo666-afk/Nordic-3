@@ -70,6 +70,24 @@ def windows_from(segments: list[dict]) -> list[tuple[float, float, str]]:
                 )
     return windows
 
+def narrow_evidence(
+    question: str, window: tuple[float, float, str], segments: list[dict]
+) -> tuple[float, float]:
+    """Choose a question-matching speech segment inside the selected window."""
+    question_words = content_words(question)
+    candidates = []
+    for index, segment in enumerate(segments):
+        if segment["start"] < window[0] - 0.02 or segment["end"] > window[1] + 0.02:
+            continue
+        overlap = len(question_words & content_words(segment["text"]))
+        if overlap:
+            duration = segment["end"] - segment["start"]
+            candidates.append((overlap, -duration, index))
+    if not candidates:
+        return window[0], window[1]
+    segment = segments[max(candidates)[2]]
+    return segment["start"], segment["end"]
+
 
 def entailment_scores(questions: list[str], windows: list[tuple[float, float, str]]) -> np.ndarray:
     pairs = [(window[2], question) for question in questions for window in windows]
@@ -112,8 +130,13 @@ def predict(request: ASRQuestionRequestDto) -> ASRQuestionResponseDto:
             else:
                 answer, index = False, 0
             answers.append(answer)
-            starts.append(windows[index][0] if answer else None)
-            ends.append(windows[index][1] if answer else None)
+            if answer:
+                start, end = narrow_evidence(question, windows[index], segments)
+                starts.append(start)
+                ends.append(end)
+            else:
+                starts.append(None)
+                ends.append(None)
     except Exception:
         logging.exception("Local prediction failed for %s", request.audio_filename)
         answers = [False] * len(request.questions)
