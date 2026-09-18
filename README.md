@@ -21,6 +21,7 @@
 | [AGENTS.md](AGENTS.md) | 团队和 AI 助手的协作规则。 |
 | [WORKLOG.md](WORKLOG.md) | 简短的进度与操作记录；接手前先读这里。 |
 | [.codex/hooks.json](.codex/hooks.json) | Codex 的自动提醒配置；只做检查，不代替规则或日志。 |
+| [.agents/skills/medical-eval/SKILL.md](.agents/skills/medical-eval/SKILL.md) | 医疗题本地评测的团队操作说明；在 Codex 中可指定 `$medical-eval`。 |
 | [medical-appointment/README.md](medical-appointment/README.md) | 官方医疗题说明，包含接口和评分细节。 |
 | [medical-appointment/RUN_LOCAL.md](medical-appointment/RUN_LOCAL.md) | Linux 本地安装、启动和评测步骤。 |
 
